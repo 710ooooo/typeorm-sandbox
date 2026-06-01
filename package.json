@@ -2,9 +2,13 @@
   "name": "typeorm-sandbox",
   "version": "1.0.0",
   "scripts": {
-    "start": "ts-node src/index.ts"
+    "start": "ts-node src/index.ts",
+    "case1": "ts-node src/index.ts case1",
+    "case2": "ts-node src/index.ts case2",
+    "case3": "ts-node src/index.ts case3"
   },
   "dependencies": {
+    "class-transformer": "^0.5.1",
     "mysql2": "^3.11.5",
     "reflect-metadata": "^0.2.2",
     "typeorm": "^0.3.20"

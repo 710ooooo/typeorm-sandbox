@@ -3,6 +3,7 @@ import { User } from "./entity/User";
 import { Post } from "./entity/Post";
 import { case1_relationJoin } from "./cases/case1";
 import { case2_manualOnJoin } from "./cases/case2";
+import { case3_doubleTransform } from "./cases/case3";
 
 async function seed() {
   const userRepo = AppDataSource.getRepository(User);
@@ -23,16 +24,24 @@ async function seed() {
   console.log("Seeded.");
 }
 
+const CASES_WITHOUT_DB = new Set(["case3"]);
+
 async function main() {
-  await AppDataSource.initialize();
-  console.log("DB connected.");
+  const target = process.argv[2]; // e.g. "case1", "case2", "case3"
 
-  await seed();
+  const needsDb = !target || !CASES_WITHOUT_DB.has(target);
 
-  await case1_relationJoin();
-  await case2_manualOnJoin();
+  if (needsDb) {
+    await AppDataSource.initialize();
+    console.log("DB connected.");
+    await seed();
+  }
 
-  await AppDataSource.destroy();
+  if (!target || target === "case1") await case1_relationJoin();
+  if (!target || target === "case2") await case2_manualOnJoin();
+  if (!target || target === "case3") await case3_doubleTransform();
+
+  if (needsDb) await AppDataSource.destroy();
 }
 
 main().catch(console.error);
